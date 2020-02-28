@@ -62,6 +62,50 @@ FROM stations LEFT JOIN
 CLUSTER BY distance LIMIT 10;
 ```
 
+Get the nearest station with valid data to a given city
+
+```
+SELECT NAME, 
+       wban, 
+       latitude, 
+       longitude, 
+       Sqrt(Pow(69.1 * (latitude - result.lat), 2) + Pow(69.1 * (result.lng - longitude) 
+* Cos(latitude / 57.3), 2)) AS distance
+FROM   stations 
+INNER JOIN data ON data.station = stations.wban
+JOIN 
+       ( 
+              SELECT lat, 
+                     lng 
+              FROM   cities 
+              WHERE  city = "London" 
+              AND    country = "United Kingdom") result CLUSTER BY distance limit 1;
+```
+
+Get the average monthly data for the nearest station to a given city
+
+```
+SELECT     From_unixtime(Unix_timestamp(time), "YYYY-MM") AS month,
+           avg(hourlydrybulbtemperature)
+FROM       data 
+INNER JOIN 
+           ( 
+                      SELECT     wban, 
+                                 Sqrt(Pow(69.1 * (latitude - result.lat), 2) + Pow(69.1 * (result.lng - longitude) * Cos(latitude / 57.3), 2)) AS distance
+                      FROM       stations 
+                      INNER JOIN data 
+                      ON         data.station = stations.wban 
+                      JOIN 
+                                 ( 
+                                        SELECT lat, 
+                                               lng 
+                                        FROM   cities 
+                                        WHERE  city = "London" 
+                                        AND    country = "United Kingdom") result cluster BY distance limit 1) nearest
+ON         data.station = nearest.wban
+GROUP BY 1
+CLUSTER BY month;
+```
 ## Data Sources
 https://www.ncdc.noaa.gov/cdo-web/datatools/lcd - Climate data
 https://simplemaps.com/data/world-cities - City location data
