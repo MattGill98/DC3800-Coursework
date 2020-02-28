@@ -106,6 +106,9 @@ ON         data.station = nearest.wban
 GROUP BY 1
 CLUSTER BY month;
 ```
+## Data Sources
+https://www.ncdc.noaa.gov/cdo-web/datatools/lcd - Climate data
+https://simplemaps.com/data/world-cities - City location data
 
 ## Contributors
 * Ivan Ermilov [@earthquakesan](https://github.com/earthquakesan) (maintainer)
