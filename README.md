@@ -62,6 +62,10 @@ FROM stations LEFT JOIN
 CLUSTER BY distance LIMIT 10;
 ```
 
+## Data Sources
+https://www.ncdc.noaa.gov/cdo-web/datatools/lcd - Climate data
+https://simplemaps.com/data/world-cities - City location data
+
 ## Contributors
 * Ivan Ermilov [@earthquakesan](https://github.com/earthquakesan) (maintainer)
 * Yiannis Mouchakis [@gmouchakis](https://github.com/gmouchakis)
